@@ -35,7 +35,7 @@ class ReviewList(generics.ListCreateAPIView):
     serializer_class = ReviewSerializer
     permission_classes = (IsAuthenticated,)
 
-class UserList(generics.ListCreateAPIView):
+class UserList(generics.ListAPIView):
     '''
     list users
     '''

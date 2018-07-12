@@ -14,8 +14,7 @@ class ReviewSerializer(serializers.ModelSerializer):
         fields = ('review', 'business', 'reviewed_by', 'reviewed_on')
 
 class UserSerializer(serializers.ModelSerializer):
-    businesses = serializers.PrimaryKeyRelatedField(many=True, queryset=Business.objects.all())
 
     class Meta:
         model = User
-        fields = ('id', 'username', 'email', 'businesses')
+        fields = ('id', 'username', 'email')
