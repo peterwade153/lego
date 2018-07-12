@@ -37,6 +37,10 @@ INSTALLED_APPS = [
     'django.contrib.sessions',
     'django.contrib.messages',
     'django.contrib.staticfiles',
+    'rest_framework',
+    'lego',
+    'api'
+
 ]
 
 MIDDLEWARE = [
@@ -75,8 +79,12 @@ WSGI_APPLICATION = 'lego.wsgi.application'
 
 DATABASES = {
     'default': {
-        'ENGINE': 'django.db.backends.sqlite3',
-        'NAME': os.path.join(BASE_DIR, 'db.sqlite3'),
+        'ENGINE': 'django.db.backends.postgresql',
+        'NAME': 'lego',
+        'USER': 'postgres',
+        'HOST': 'localhost',
+        'PASSWORD': 'admin',
+        'PORT': '5432',
     }
 }
 
