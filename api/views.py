@@ -4,6 +4,7 @@ from rest_framework.permissions import IsAuthenticated
 
 from api.models import Business, Reviews
 from api.serializers import BusinessSerializer, ReviewSerializer, UserSerializer
+from api.permissions import IsOwnerOrReadOnly
 
 class BusinessList(generics.ListCreateAPIView):
     '''
@@ -11,7 +12,7 @@ class BusinessList(generics.ListCreateAPIView):
     '''
     queryset = Business.objects.all()
     serializer_class = BusinessSerializer
-    permission_classes = (IsAuthenticated,)
+    permission_classes = (IsAuthenticated, IsOwnerOrReadOnly, )
 
     def perform_create(self, serializer):
         '''
@@ -25,7 +26,7 @@ class BusinessDetail(generics.RetrieveUpdateDestroyAPIView):
     '''
     queryset = Business.objects.all()
     serializer_class = BusinessSerializer
-    permission_classes = (IsAuthenticated,)
+    permission_classes = (IsAuthenticated, IsOwnerOrReadOnly,)
 
 class ReviewList(generics.ListCreateAPIView):
     '''
