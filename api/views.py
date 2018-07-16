@@ -1,12 +1,13 @@
 from rest_framework import generics
 from django.contrib.auth.models import User
+from rest_framework import viewsets
 from rest_framework.permissions import IsAuthenticated
 
 from api.models import Business, Reviews
 from api.serializers import BusinessSerializer, ReviewSerializer, UserSerializer
-from api.permissions import IsOwnerOrReadOnly
+from api.permissions import IsOwnerOrReadOnly, IsNotOwner
 
-class BusinessList(generics.ListCreateAPIView):
+class BusinessViewSet(viewsets.ModelViewSet):
     '''
     lists all registered businesses and also enables posting of new business
     '''
@@ -20,33 +21,17 @@ class BusinessList(generics.ListCreateAPIView):
         '''
         serializer.save(owner=self.request.user )
 
-class BusinessDetail(generics.RetrieveUpdateDestroyAPIView):
-    '''
-    fetches a single business, updates and also deletes
-    '''
-    queryset = Business.objects.all()
-    serializer_class = BusinessSerializer
-    permission_classes = (IsAuthenticated, IsOwnerOrReadOnly,)
-
-class ReviewList(generics.ListCreateAPIView):
+class ReviewViewSet(viewsets.ModelViewSet):
     '''
     lists all reviews and also enables posting of new reviews
     '''
     queryset = Reviews.objects.all()
     serializer_class = ReviewSerializer
-    permission_classes = (IsAuthenticated,)
+    permission_classes = (IsAuthenticated, IsNotOwner)
 
-class UserList(generics.ListAPIView):
+class UserViewSet(viewsets.ReadOnlyModelViewSet):
     '''
-    list users
-    '''
-    queryset = User.objects.all()
-    serializer_class = UserSerializer
-
-
-class UserDetail(generics.RetrieveAPIView):
-    '''
-    list a particular user
+    This viewset automatically provides `list` and `detail` actions.
     '''
     queryset = User.objects.all()
     serializer_class = UserSerializer
