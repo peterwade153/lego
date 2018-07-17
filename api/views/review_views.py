@@ -1,28 +1,11 @@
 from rest_framework import generics
-from django.contrib.auth.models import User
-from rest_framework import viewsets
 from rest_framework.permissions import IsAuthenticated
 from rest_framework.response import Response
 from rest_framework.views import status
 
 from api.models import Business, Reviews
-from api.serializers import BusinessSerializer, ReviewSerializer, UserSerializer
+from api.serializers import ReviewSerializer
 from api.permissions import IsOwnerOrReadOnly, IsNotOwner
-
-class BusinessViewSet(viewsets.ModelViewSet):
-    '''
-    lists all registered businesses and also enables posting of new business
-    '''
-    queryset = Business.objects.all()
-    serializer_class = BusinessSerializer
-    permission_classes = (IsAuthenticated, IsOwnerOrReadOnly, )
-
-    def perform_create(self, serializer):
-        '''
-        Will enable associate a user to business they registered
-        '''
-        serializer.save(owner=self.request.user )
-
 
 class ReviewList(generics.ListCreateAPIView):
     '''
@@ -36,17 +19,14 @@ class ReviewList(generics.ListCreateAPIView):
         '''
         List all business reviews
         '''
-        id = self.kwargs['id']
-        return Reviews.objects.filter(business_id=id)
-
+        return Reviews.objects.filter(business_id=self.kwargs['id'])
 
     def post(self, request, *args, **kwargs):
         '''
         creating new reviews
         '''
-        id = self.kwargs['id']
         try:
-            business = Business.objects.get(id=id)
+            business = Business.objects.get(id=self.kwargs['id'])
             data = {
                 'review':request.data['review'],
                 'business':business.id,
@@ -59,12 +39,4 @@ class ReviewList(generics.ListCreateAPIView):
             return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
         except Business.DoesNotExist:
             return Response(status=status.HTTP_404_NOT_FOUND)
-
-
-class UserViewSet(viewsets.ReadOnlyModelViewSet):
-    '''
-    This viewset automatically provides `list` and `detail` actions.
-    '''
-    queryset = User.objects.all()
-    serializer_class = UserSerializer
 
