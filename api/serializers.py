@@ -10,8 +10,8 @@ class BusinessSerializer(serializers.ModelSerializer):
         fields = ('id','business_name', 'location', 'category', 'owner', 'created_on')
 
 class ReviewSerializer(serializers.ModelSerializer):
-    business = serializers.ReadOnlyField(source='business.business_name')
-    reviewed_by = serializers.ReadOnlyField(source='reviewed_by.username')
+    business = serializers.PrimaryKeyRelatedField( queryset=Business.objects.all())
+    reviewed_by = serializers.PrimaryKeyRelatedField( queryset=User.objects.all())
     class Meta:
         model = Reviews
         fields = ('review', 'business', 'reviewed_by', 'reviewed_on')

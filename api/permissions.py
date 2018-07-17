@@ -26,4 +26,3 @@ class IsNotOwner(permissions.BasePermission):
 
         # edit and delete permissions only for business owner
         return obj.business.owner != request.user
-        
